@@ -12,3 +12,5 @@ export const STATUSBAR_HEIGHT =
       ? 44
       : 20
     : 0
+
+export const WINDOW_WIDTH = D.width

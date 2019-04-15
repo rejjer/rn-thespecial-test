@@ -6,19 +6,25 @@ import { getModuleActionName } from '../../utils/helpers'
 
 const getActionName = getModuleActionName('feed')
 
-export const REQUEST_FEED = getActionName('REQUEST_FEED')
-export const FEED_SUCCESS = getActionName('FEED_SUCCESS')
+export const FEED_REFRESH_REQUEST = getActionName('FEED_REFRESH_REQUEST')
+export const FEED_REFRESH_SUCCESS = getActionName('FEED_REFRESH_SUCCESS')
+export const FEED_REFRESH_REJECT = getActionName('FEED_REFRESH_REJECT')
 
-export const FEED_REJECT = getActionName('FEED_REJECT')
-export const LOGOUT_SUCCESS = getActionName('LOGOUT_SUCCESS')
+export const FEED_NEXT_REQUEST = getActionName('FEED_NEXT_REQUEST')
+export const FEED_NEXT_SUCCESS = getActionName('FEED_NEXT_SUCCESS')
+export const FEED_NEXT_REJECT = getActionName('FEED_NEXT_REJECT')
 
 /* #endregion */
 
 /* #region Action Creators */
 
-export const requestFeed = createAction(REQUEST_FEED)
-export const feedSuccess = createAction(FEED_SUCCESS)
-export const feedReject = createAction(FEED_REJECT)
+export const feedRefreshRequest = createAction(FEED_REFRESH_REQUEST)
+export const feedRefreshSuccess = createAction(FEED_REFRESH_SUCCESS)
+export const feedRefreshReject = createAction(FEED_REFRESH_REJECT)
+
+export const feedNextRequest = createAction(FEED_NEXT_REQUEST)
+export const feedNextSuccess = createAction(FEED_NEXT_SUCCESS)
+export const feedNextReject = createAction(FEED_NEXT_REJECT)
 
 /* #endregion */
 
@@ -26,26 +32,61 @@ export const feedReject = createAction(FEED_REJECT)
 
 const feed = handleActions(
   {
-    [REQUEST_FEED]: state => ({ ...state, isFetching: true, isError: false }),
-    [FEED_SUCCESS]: R.useWith(
-      (state, { data, nextPage, totalPages }) => {
+    [FEED_REFRESH_REQUEST]: state => ({
+      ...state,
+      nextIsFetching: false,
+      refreshIsFetching: true,
+    }),
+    [FEED_REFRESH_SUCCESS]: R.useWith(
+      (state, { data, columnsData, nextPage, totalPages }) => {
         return {
           ...state,
           data,
+          columnsData,
           nextPage,
           totalPages,
-          isFetching: false,
+          refreshIsFetching: false,
+          isError: false,
         }
       },
       [R.identity, R.path(['payload'])],
     ),
-    [FEED_REJECT]: state => ({ ...state, isFetching: false, isError: true }),
+    [FEED_REFRESH_REJECT]: state => ({
+      ...state,
+      refreshIsFetching: false,
+      isError: true,
+    }),
+    [FEED_NEXT_REQUEST]: state => ({
+      ...state,
+      nextIsFetching: true,
+    }),
+    [FEED_NEXT_SUCCESS]: R.useWith(
+      (state, { data, columnsData, nextPage, totalPages }) => {
+        return {
+          ...state,
+          data,
+          columnsData,
+          nextPage,
+          totalPages,
+          nextIsFetching: false,
+          isError: false,
+        }
+      },
+      [R.identity, R.path(['payload'])],
+    ),
+    [FEED_NEXT_REJECT]: state => ({
+      ...state,
+      nextIsFetching: false,
+      isError: true,
+    }),
   },
   {
-    data: null,
+    data: [],
+    columnsData: [],
     nextPage: 0,
     totalPages: 0,
-    isFetching: false,
+    refreshIsFetching: false,
+    nextIsFetching: false,
     isError: false,
   },
 )

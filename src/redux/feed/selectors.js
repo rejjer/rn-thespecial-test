@@ -2,9 +2,14 @@ import R from 'ramda'
 
 const getState = R.prop('feed')
 
-const getIsFetching = R.pipe(
+const getRefreshIsFetching = R.pipe(
   getState,
-  R.prop('isFetching'),
+  R.prop('refreshIsFetching'),
+)
+
+const getNextIsFetching = R.pipe(
+  getState,
+  R.prop('nextIsFetching'),
 )
 
 const getIsError = R.pipe(
@@ -15,6 +20,10 @@ const getIsError = R.pipe(
 const getData = R.pipe(
   getState,
   R.prop('data'),
+)
+const getColumnsData = R.pipe(
+  getState,
+  R.prop('columnsData'),
 )
 
 const getNextPage = R.pipe(
@@ -28,9 +37,11 @@ const getTotalPages = R.pipe(
 )
 
 export default {
-  getIsFetching,
+  getRefreshIsFetching,
+  getNextIsFetching,
   getIsError,
   getData,
+  getColumnsData,
   getNextPage,
   getTotalPages,
 }

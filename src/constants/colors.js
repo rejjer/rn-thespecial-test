@@ -1,0 +1,5 @@
+export const PINK = '#e8b6b7'
+export const GRAY = '#acacac'
+export const BLACK = '#282828'
+export const WHITE = '#fff'
+export const TRANSPARENT = '#fff0'
